@@ -6,14 +6,13 @@ from __future__ import unicode_literals
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from zk_integration.zk.doctype.zk_device.zk_device import sync_employee
-from zk_integration.zk.doctype.zk_device.zk_device import get_active_device_logs
 
 class DeviceLog(Document):
 	pass
 
 @frappe.whitelist()
 def create_employee_checkin(names=None):
+	from zk_integration.zk.doctype.zk_device.zk_device import sync_employee
 	sync_employee()
 	logs = frappe.db.sql("""
 		SELECT dl.name, dl.employee, dl.time, dl.type AS log_type, dl.device
@@ -47,6 +46,7 @@ def create_employee_checkin(names=None):
 		frappe.msgprint(_(f"✅ {count} Employee Checkin records created successfully."))
 
 def execute(names=None):
+	from zk_integration.zk.doctype.zk_device.zk_device import get_active_device_logs, sync_employee
 	try:
 		get_active_device_logs()
 	except Exception:
