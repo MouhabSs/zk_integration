@@ -1,0 +1,267 @@
+/* =============================================
+   ZK Integration - Custom UI Styles
+   Compatible with ERPNext V15 / Frappe V15
+   ============================================= */
+
+/* ---- ZK Device Form Header Banner ---- */
+.zk-device-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 20px rgba(15, 52, 96, 0.4);
+}
+.zk-device-header .zk-icon {
+    font-size: 2.5rem;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.zk-device-header .zk-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+.zk-device-header .zk-subtitle {
+    font-size: 0.85rem;
+    opacity: 0.75;
+    margin-top: 2px;
+}
+
+/* ---- Connection Status Badge ---- */
+.zk-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 10px;
+}
+.zk-status-badge.connected {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+.zk-status-badge.disconnected {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+.zk-status-badge.unknown {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+
+/* ---- Stats Cards Row ---- */
+.zk-stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin: 16px 0 20px 0;
+}
+.zk-stat-card {
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: default;
+}
+.zk-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+.zk-stat-card .stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #0f3460;
+    line-height: 1;
+}
+.zk-stat-card .stat-label {
+    font-size: 0.72rem;
+    color: #6c757d;
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.zk-stat-card.today   { border-top: 3px solid #28a745; }
+.zk-stat-card.total   { border-top: 3px solid #007bff; }
+.zk-stat-card.unsynced{ border-top: 3px solid #ffc107; }
+.zk-stat-card.errors  { border-top: 3px solid #dc3545; }
+
+/* ---- Custom Action Buttons ---- */
+.zk-action-btn {
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    padding: 8px 18px !important;
+    transition: all 0.2s !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.10) !important;
+}
+.zk-action-btn:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+}
+
+/* ---- Error Log Box ---- */
+.zk-error-box {
+    background: #fff5f5 !important;
+    border-left: 4px solid #dc3545 !important;
+    border-radius: 0 8px 8px 0 !important;
+    padding: 10px 14px !important;
+    font-family: 'Courier New', monospace !important;
+    font-size: 0.8rem !important;
+    color: #721c24 !important;
+    max-height: 120px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+/* ---- Animated Sync Progress Bar ---- */
+.zk-sync-progress {
+    height: 6px;
+    border-radius: 3px;
+    background: #e9ecef;
+    overflow: hidden;
+    margin: 8px 0;
+}
+.zk-sync-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #0f3460, #1a6bb5, #28a745, #1a6bb5, #0f3460);
+    background-size: 300% 100%;
+    animation: zkShimmer 1.8s linear infinite;
+    border-radius: 3px;
+    width: 100%;
+}
+@keyframes zkShimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ---- Device Log Form Header ---- */
+.device-log-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 14px;
+}
+.device-log-header.type-in {
+    background: linear-gradient(135deg, #d4edda, #c3e6cb);
+    border-left: 5px solid #28a745;
+}
+.device-log-header.type-out {
+    background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+    border-left: 5px solid #dc3545;
+}
+.device-log-header .log-type-badge {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+.device-log-header .log-info .log-employee {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #212529;
+}
+.device-log-header .log-info .log-time {
+    font-size: 0.83rem;
+    color: #495057;
+    margin-top: 3px;
+}
+
+/* ---- List View Rows ---- */
+.list-row {
+    border-radius: 8px !important;
+    margin-bottom: 3px !important;
+    transition: background 0.15s !important;
+}
+.list-row:hover {
+    background: #f0f4ff !important;
+}
+.list-row.in-row  { border-left: 3px solid #28a745 !important; }
+.list-row.out-row { border-left: 3px solid #dc3545 !important; }
+
+/* ---- Filters ---- */
+.filter-box .form-control,
+.filter-box select {
+    border-radius: 8px !important;
+    border: 1px solid #ced4da !important;
+    transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+.filter-box .form-control:focus {
+    border-color: #0f3460 !important;
+    box-shadow: 0 0 0 3px rgba(15,52,96,0.12) !important;
+}
+
+/* ---- IN/OUT Pills in List ---- */
+.zk-pill-in {
+    background: #d4edda;
+    color: #155724;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    display: inline-block;
+}
+.zk-pill-out {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    display: inline-block;
+}
+.zk-pill-unlinked {
+    color: #adb5bd;
+    font-style: italic;
+    font-size: 0.85rem;
+}
+.zk-code-chip {
+    background: #f0f4ff;
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    font-family: monospace;
+}
+
+/* ---- Dark Mode Support ---- */
+[data-theme="dark"] .zk-stat-card {
+    background: #1e1e2e;
+    border-color: #2d2d3f;
+}
+[data-theme="dark"] .zk-stat-card .stat-value { color: #7eb8f7; }
+[data-theme="dark"] .zk-error-box {
+    background: #2d1a1a !important;
+    color: #f8d7da !important;
+}
+[data-theme="dark"] .device-log-header.type-in {
+    background: linear-gradient(135deg, #1a3326, #1f4a33);
+}
+[data-theme="dark"] .device-log-header.type-out {
+    background: linear-gradient(135deg, #3a1a1a, #4a1f1f);
+}
+[data-theme="dark"] .list-row:hover {
+    background: #1a1f3a !important;
+}
+[data-theme="dark"] .zk-pill-in  { background: #1a3326; color: #5cb85c; }
+[data-theme="dark"] .zk-pill-out { background: #3a1a1a; color: #e87b7b; }
+[data-theme="dark"] .zk-code-chip { background: #1a1f3a; color: #7eb8f7; }
