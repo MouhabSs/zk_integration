@@ -6,7 +6,6 @@ from __future__ import unicode_literals
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from zk import ZK, const
 from datetime import datetime, date, timedelta
 import json
 import dateutil
@@ -18,6 +17,7 @@ DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 class ZKDevice(Document):
     @frappe.whitelist()
     def get_device_log (self,show_progress=False):
+        from zk import ZK, const  # Import here to avoid load-time failure during app install
         conn = None
         zk = ZK(self.ip, port=self.port, password=self.password,timeout=20 , force_udp=self.udp or True, ommit_ping=self.ping or True)
         # zk = ZK('192.168.1.201', port=4370, timeout=20 , ommit_ping=False)
