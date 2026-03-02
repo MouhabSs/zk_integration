@@ -15,7 +15,7 @@ app_license = "MIT"
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/zk_integration/css/zk_integration.css"
+app_include_css = ["/assets/zk_integration/css/zk_integration.css"]
 # app_include_js = "/assets/zk_integration/js/zk_integration.js"
 
 # include js, css files in header of web template
