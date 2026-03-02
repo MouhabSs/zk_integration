@@ -1,4 +1,11 @@
 frappe.listview_settings["Device Log"] = {
+  get_indicator: function(doc) {
+    if (doc.type === 'IN') {
+      return [__('IN'), 'green', 'type,=,IN'];
+    } else {
+      return [__('OUT'), 'red', 'type,=,OUT'];
+    }
+  },
   refresh: function (listview) {
     listview.page.add_menu_item(__("Create Employee Checkin"), function () {
       create_employee_checkin(listview);

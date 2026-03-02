@@ -104,7 +104,7 @@ app_license = "MIT"
 
 scheduler_events = {
 "cron": {
-		"0/5 * * * *": [
+		"*/5 * * * *": [
 			"zk_integration.zk.doctype.device_log.device_log.execute"
 		]
 	},
@@ -112,8 +112,6 @@ scheduler_events = {
 		# "zk_integration.tasks.all"
 	],
 	"daily": [
-		"zk_integration.zk.doctype.zk_device.zk_device.get_active_device_logs",
-		"zk_integration.zk.doctype.device_log.device_log.create_employee_checkin"
 	],
 	"hourly": [
 		# "zk_integration.tasks.hourly"

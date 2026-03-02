@@ -15,7 +15,7 @@ import dateutil
 # from zk_integration.zk.doctype.device_log.device_log import create_employee_checkin
 from frappe.utils.data import DATE_FORMAT , TIME_FORMAT 
 
-DATETIME_FORMAT = "%Y-%m-%m %H:%M:%S"
+DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 class ZKDevice(Document):
     @frappe.whitelist()
@@ -58,23 +58,28 @@ class ZKDevice(Document):
                         continue
 
                 try:
-                # if True:
-                # frappe.msgprint(str(log))
-                    log.status = 'IN' if log.status ==1 else 'OUT'
+                    if log.status in [0, 4]:
+                        log.status = 'IN'
+                    elif log.status in [1, 5]:
+                        log.status = 'OUT'
+                    else:
+                        log.status = 'IN'  # safe fallback
 
-                    # log.status = log.status.upper()
                     name = "{}-{}".format(log.user_id,log.timestamp)
-                    sql = """
-                    insert Into `tabDevice Log` 
-                    (name,employee,enroll_no,time,date,type,punch,creation,modified , owner , device) 
-                    values 
-                    ('{}',(select name from tabEmployee where attendance_device_id = '{}' limit 1),'{}','{}','{}','{}','{}',CURRENT_TIMESTAMP(),CURRENT_TIMESTAMP() , '{}','{}')
-                    """.format(name,log.user_id,log.user_id,log.timestamp , log.timestamp.date()
-                                ,log.status,log.punch,frappe.session.user,self.name )
-                    # frappe.msgprint(sql)
-
-                    frappe.db.sql(sql)
-                    # last_log_users [log.user_id] = datetime.strptime(str(log.timestamp),DATETIME_FORMAT)
+                    frappe.db.sql("""
+                        INSERT IGNORE INTO `tabDevice Log`
+                        (name, enroll_no, time, date, type, punch, creation, modified, owner, device)
+                        VALUES (%s, %s, %s, %s, %s, %s, NOW(), NOW(), %s, %s)
+                    """, (
+                        name,
+                        log.user_id,
+                        log.timestamp,
+                        log.timestamp.date(),
+                        log.status,
+                        log.punch,
+                        frappe.session.user,
+                        self.name
+                    ))
                     last_log_users [log.user_id] = dateutil.parser.parse(str(log.timestamp))
                 except Exception as e :
                         pass 
@@ -117,26 +122,26 @@ def sync_employee():
 	)
 	""")
 	frappe.db.commit()
-	frappe.msgprint(_("Done"))
+	if not frappe.flags.in_scheduler:
+		frappe.msgprint(_("✅ Employee sync completed."))
 @frappe.whitelist()
 def get_active_device_logs(names = None):
 	if names :
 		names = json.loads(str(names))
 	cur_time = datetime.now()
-	devices = names or  frappe.db.sql_list (f""" 
-		select name from `tabZK Device` where docstatus < 2 and auto_attendance = 1
-    and ( STR_TO_DATE('{cur_time}', '%Y-%m-%d %T') >= excecution_time or ifnull(excecution_time,0)=0) ;
-	""")
-	# frappe.msgprint(f""" 
-	# 	select name from `tabZK Device` where docstatus < 2 and auto_attendance = 1
-    # and ( STR_TO_DATE('{cur_time}', '%d-%m-%Y %T') >= excecution_time or ifnull(excecution_time,0)=0) ;
-	# """)
+	devices = names or frappe.db.sql_list("""
+		SELECT name FROM `tabZK Device`
+		WHERE docstatus < 2
+		  AND auto_attendance = 1
+		  AND (excecution_time IS NULL OR excecution_time <= %s)
+	""", (cur_time,))
 	for device in devices:
 		doc = frappe.get_doc("ZK Device",device)
 		try:
 			doc.get_device_log()
 		except Exception as e:
-			frappe.msgprint(_("Process terminate : {}".format(e)), indicator='red')
+			if not frappe.flags.in_scheduler:
+				frappe.msgprint(_("Process terminate : {}".format(e)), indicator='red')
 
 
 
