@@ -7,13 +7,11 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from zk import ZK, const
-from datetime import datetime,date,timedelta , time
-from frappe.utils import to_timedelta
+from datetime import datetime, date, timedelta
 import json
 import dateutil
 # from zk.doctype.device_log.device_log import create_employee_checkin
 # from zk_integration.zk.doctype.device_log.device_log import create_employee_checkin
-from frappe.utils.data import DATE_FORMAT , TIME_FORMAT 
 
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
