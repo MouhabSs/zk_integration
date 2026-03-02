@@ -11,28 +11,51 @@ from zk_integration.zk.doctype.zk_device.zk_device import get_active_device_logs
 
 class DeviceLog(Document):
 	pass
+
 @frappe.whitelist()
 def create_employee_checkin(names=None):
 	sync_employee()
-	sql = """
-	Insert Into `tabEmployee Checkin` (name , employee , time , log_type,device_log,device,creation,modified,owner)
-	(select name , employee , time , type,name,device,creation,modified,owner from `tabDevice Log` where employee is not null
-	and  name not in (select device_log from `tabEmployee Checkin` where device_log is not null));
-	"""
-	# frappe.msgprint(sql)
-	frappe.db.sql(sql)
-	frappe.db.commit()
+	logs = frappe.db.sql("""
+		SELECT dl.name, dl.employee, dl.time, dl.type AS log_type, dl.device
+		FROM `tabDevice Log` dl
+		WHERE dl.employee IS NOT NULL
+		  AND dl.name NOT IN (
+		      SELECT ec.device_log FROM `tabEmployee Checkin` ec
+		      WHERE ec.device_log IS NOT NULL
+		  )
+		ORDER BY dl.time ASC
+	""", as_dict=True)
 
-def execute (names=None):
+	count = 0
+	for log in logs:
+		try:
+			doc = frappe.get_doc({
+				"doctype": "Employee Checkin",
+				"employee": log.employee,
+				"time": log.time,
+				"log_type": log.log_type,
+				"device_id": log.device,
+				"device_log": log.name,
+			})
+			doc.insert(ignore_permissions=True)
+			count += 1
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), f"ZK Checkin Error: {log.name}")
+
+	frappe.db.commit()
+	if not frappe.flags.in_scheduler:
+		frappe.msgprint(_(f"✅ {count} Employee Checkin records created successfully."))
+
+def execute(names=None):
 	try:
 		get_active_device_logs()
-	except :
-		pass
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "ZK: get_active_device_logs failed")
 	try:
 		sync_employee()
-	except :
-		pass
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "ZK: sync_employee failed")
 	try:
 		create_employee_checkin()
-	except :
-		pass
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "ZK: create_employee_checkin failed")
