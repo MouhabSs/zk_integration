@@ -18,6 +18,7 @@ zk_integration/config/desktop.py
 zk_integration/config/docs.py
 zk_integration/config/hr.py
 zk_integration/config/zk.py
+zk_integration/public/css/zk_integration.css
 zk_integration/templates/__init__.py
 zk_integration/templates/pages/__init__.py
 zk_integration/templates/pages/__pycache__/__init__.py
@@ -31,8 +32,6 @@ zk_integration/zk/doctype/device_log/device_log.py
 zk_integration/zk/doctype/device_log/device_log_list.js
 zk_integration/zk/doctype/device_log/test_device_log.py
 zk_integration/zk/doctype/print/print.py
-zk_integration/zk/doctype/zk_device/1zk_device.js
-zk_integration/zk/doctype/zk_device/1zk_device.py
 zk_integration/zk/doctype/zk_device/__init__.py
 zk_integration/zk/doctype/zk_device/test_zk_device.py
 zk_integration/zk/doctype/zk_device/zk_device.js
