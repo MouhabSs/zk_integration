@@ -132,36 +132,67 @@ function zk_device_setup_buttons(frm) {
 }
 
 /* ---- Get Logs with animated freeze message ---- */
+// function zk_do_get_logs(frm) {
+//     frm.save().then(() => {
+//         frappe.call({
+//             method: 'get_device_log',
+//             doc: frm.doc,
+//             args: { show_progress: 1 },
+//             freeze: true,
+//             freeze_message: `
+//                 <div style="text-align:center;padding:14px 10px">
+//                     <div style="font-size:2.5rem;margin-bottom:8px">🖥️</div>
+//                     <div style="font-weight:700;font-size:1rem;margin-bottom:4px">
+//                         ${__('Connecting to ZK Device...')}
+//                     </div>
+//                     <div style="color:#6c757d;font-size:0.85rem;margin-bottom:10px">
+//                         ${frappe.utils.escape_html(frm.doc.ip)}:${frappe.utils.escape_html(String(frm.doc.port || 4370))}
+//                     </div>
+//                     <div class="zk-sync-progress" style="width:220px;margin:auto">
+//                         <div class="zk-sync-progress-bar"></div>
+//                     </div>
+//                 </div>
+//             `,
+//             callback: function() {
+//                 frappe.show_alert({ message: __('✅ Logs fetched successfully!'), indicator: 'green' });
+//                 frm.reload_doc();
+//             },
+//             error: function() {
+//                 frappe.show_alert({ message: __('❌ Failed. Check device connection.'), indicator: 'red' });
+//                 frm.reload_doc();
+//             }
+//         });
+//     });
+// }
+/* ---- Get Logs ---- */
 function zk_do_get_logs(frm) {
-    frm.save().then(() => {
-        frappe.call({
-            method: 'get_device_log',
-            doc: frm.doc,
-            args: { show_progress: 1 },
-            freeze: true,
-            freeze_message: `
-                <div style="text-align:center;padding:14px 10px">
-                    <div style="font-size:2.5rem;margin-bottom:8px">🖥️</div>
-                    <div style="font-weight:700;font-size:1rem;margin-bottom:4px">
-                        ${__('Connecting to ZK Device...')}
-                    </div>
-                    <div style="color:#6c757d;font-size:0.85rem;margin-bottom:10px">
-                        ${frappe.utils.escape_html(frm.doc.ip)}:${frappe.utils.escape_html(String(frm.doc.port || 4370))}
-                    </div>
-                    <div class="zk-sync-progress" style="width:220px;margin:auto">
-                        <div class="zk-sync-progress-bar"></div>
-                    </div>
+    frappe.call({
+        method: 'get_device_log',
+        doc: frm.doc,
+        args: { show_progress: 1 },
+        freeze: true,
+        freeze_message: `
+            <div style="text-align:center;padding:14px 10px">
+                <div style="font-size:2.5rem;margin-bottom:8px">🖥️</div>
+                <div style="font-weight:700;font-size:1rem;margin-bottom:4px">
+                    ${__('Connecting to ZK Device...')}
                 </div>
-            `,
-            callback: function() {
-                frappe.show_alert({ message: __('✅ Logs fetched successfully!'), indicator: 'green' });
-                frm.reload_doc();
-            },
-            error: function() {
-                frappe.show_alert({ message: __('❌ Failed. Check device connection.'), indicator: 'red' });
-                frm.reload_doc();
-            }
-        });
+                <div style="color:#6c757d;font-size:0.85rem;margin-bottom:10px">
+                    ${frappe.utils.escape_html(frm.doc.ip)}:${frappe.utils.escape_html(String(frm.doc.port || 4370))}
+                </div>
+                <div class="zk-sync-progress" style="width:220px;margin:auto">
+                    <div class="zk-sync-progress-bar"></div>
+                </div>
+            </div>
+        `,
+        callback: function() {
+            frappe.show_alert({ message: __('✅ Logs fetched successfully!'), indicator: 'green' });
+            frm.reload_doc();
+        },
+        error: function() {
+            frappe.show_alert({ message: __('❌ Failed. Check device connection.'), indicator: 'red' });
+            frm.reload_doc();
+        }
     });
 }
 

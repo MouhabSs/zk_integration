@@ -19,7 +19,9 @@ class ZKDevice(Document):
     def get_device_log (self,show_progress=False):
         from zk import ZK, const  # Import here to avoid load-time failure during app install
         conn = None
-        zk = ZK(self.ip, port=self.port, password=self.password,timeout=20 , force_udp=self.udp or True, ommit_ping=self.ping or True)
+        # FIXED
+        zk = ZK(self.ip, port=self.port, password=self.password, timeout=20, force_udp=bool(self.udp), ommit_ping=not bool(self.ping))
+        #zk = ZK(self.ip, port=self.port, password=self.password,timeout=20 , force_udp=self.udp or True, ommit_ping=self.ping or True)
         # zk = ZK('192.168.1.201', port=4370, timeout=20 , ommit_ping=False)
         # if True:
         try:
@@ -51,17 +53,25 @@ class ZKDevice(Document):
                     continue
                 last_timestamp = last_log_users.get(log.user_id) or None
                 if period and last_timestamp:
-                    diff = (log.timestamp -  last_timestamp).seconds / 3600
+                    diff = (log.timestamp - last_timestamp).seconds / 60  # convert to minutes
+                    #diff = (log.timestamp -  last_timestamp).seconds / 3600
                     if diff < period :
                         continue
 
                 try:
-                    if log.status in [0, 4]:
+                    # More reliable than status codes
+                    if log.punch == 0:
                         log.status = 'IN'
-                    elif log.status in [1, 5]:
+                    elif log.punch == 1:
                         log.status = 'OUT'
                     else:
-                        log.status = 'IN'  # safe fallback
+                        # fallback to status code
+                        if log.status in [0, 4]:
+                            log.status = 'IN'
+                        elif log.status in [1, 5]:
+                            log.status = 'OUT'
+                        else:
+                            log.status = 'IN'
 
                     name = "{}-{}".format(log.user_id,log.timestamp)
                     frappe.db.sql("""
